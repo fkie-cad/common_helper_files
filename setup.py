@@ -6,8 +6,11 @@ setup(
     version=__version__,
     packages=find_packages(),
     install_requires=[
-        'hurry.filesize >= 0.9'
+        'hurry.filesize'
     ],
     description="file operation helper functions",
-    license="MIT License"
+    author="Fraunhofer FKIE",
+    author_email="peter.weidenbach@fkie.fraunhofer.de",
+    url="http://www.fkie.fraunhofer.de",
+    license="GPL-3.0"
 )

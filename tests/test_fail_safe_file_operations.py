@@ -1,10 +1,10 @@
-import unittest
 import os
 from tempfile import TemporaryDirectory
+import unittest
 
-from common_helper_files import get_binary_from_file,\
-    write_binary_to_file, delete_file, get_safe_name,\
-    get_files_in_dir, get_string_list_from_file,\
+from common_helper_files import get_binary_from_file, \
+    write_binary_to_file, delete_file, get_safe_name, \
+    get_files_in_dir, get_string_list_from_file, \
     get_dirs_in_dir, get_directory_for_filename
 from common_helper_files.fail_safe_file_operations import _get_counted_file_path
 
