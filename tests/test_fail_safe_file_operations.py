@@ -5,7 +5,8 @@ import unittest
 from common_helper_files import get_binary_from_file, \
     write_binary_to_file, delete_file, get_safe_name, \
     get_files_in_dir, get_string_list_from_file, \
-    get_dirs_in_dir, get_directory_for_filename
+    get_dirs_in_dir, get_directory_for_filename, \
+    create_symlink
 from common_helper_files.fail_safe_file_operations import _get_counted_file_path
 
 
@@ -70,6 +71,13 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         self.assertFalse(os.path.exists(file_path))
         # Test delete none existing file
         delete_file(file_path)
+
+    def test_create_symlink(self):
+        test_file_path = os.path.join(self.tmp_dir.name, 'test_folder', 'test_file')
+        symlink_path = os.path.join(self.tmp_dir.name, 'test_symlink')
+        create_symlink(test_file_path, symlink_path)
+        self.assertEqual(os.readlink(symlink_path), test_file_path)
+        create_symlink(test_file_path, symlink_path)
 
     def test_get_safe_name(self):
         a = "/()=Hello%&World!? Foo"

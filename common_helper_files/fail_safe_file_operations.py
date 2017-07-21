@@ -1,7 +1,8 @@
-import os
-import sys
 import logging
+import os
 import re
+import sys
+from builtins import FileExistsError
 
 from .file_functions import create_dir_for_file
 
@@ -101,6 +102,25 @@ def delete_file(file_path):
         os.unlink(file_path)
     except Exception as e:
         logging.error("Could not delete file: {} {}".format(sys.exc_info()[0].__name__, e))
+
+
+def create_symlink(src_path, dst_path):
+    """
+    Fail-safe symlink operation. Symlinks a file if dest does not exist.
+    Errors are logged. No exception raised.
+
+    :param src_path: src file
+    :type src_path: str
+    :param dst_path: link location
+    :type dst_path: str
+    :return: None
+    """
+    try:
+        os.symlink(src_path, dst_path)
+    except FileExistsError as e:
+        logging.debug("Could not create Link: File exists: {}".format(e))
+    except Exception as e:
+        logging.error("Could not create link: {} {}".format(sys.exc_info()[0].__name__, e))
 
 
 def get_safe_name(file_name, max_size=200, valid_characters='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_+. '):
