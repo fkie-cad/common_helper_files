@@ -6,7 +6,7 @@ from common_helper_files import get_binary_from_file, \
     write_binary_to_file, delete_file, get_safe_name, \
     get_files_in_dir, get_string_list_from_file, \
     get_dirs_in_dir, get_directory_for_filename, \
-    create_symlink
+    create_symlink, get_dir_of_file
 from common_helper_files.fail_safe_file_operations import _get_counted_file_path
 
 
@@ -106,6 +106,17 @@ class Test_FailSafeFileOperations(unittest.TestCase):
     def test_get_dirs_in_dir_error(self):
         result = get_dirs_in_dir("/none_existing/dir")
         self.assertEqual(result, [], "error result should be an empty list")
+
+    def test_get_dir_of_file_relative_path(self):
+        relative_path_result = get_dir_of_file("test/some_file")
+        expected_result = os.path.join(os.getcwd(), "test")
+        self.assertEqual(relative_path_result, expected_result)
+
+    def test_get_dir_of_file_absolute_path(self):
+        test_file_path = os.path.join(self.tmp_dir.name, 'test_file')
+        write_binary_to_file('test', test_file_path)
+        absolute_file_path_result = get_dir_of_file(test_file_path)
+        self.assertEqual(absolute_file_path_result, self.tmp_dir.name)
 
 
 if __name__ == "__main__":

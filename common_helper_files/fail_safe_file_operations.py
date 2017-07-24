@@ -183,3 +183,19 @@ def get_dirs_in_dir(directory_path):
     except Exception as e:
         logging.error("Could not get directories: {} {}".format(sys.exc_info()[0].__name__, e))
     return result
+
+
+def get_dir_of_file(file_path):
+    """
+    Returns absolute path of the directory including file
+
+    :param file_path: Paht of the file
+    :type: paht-like object
+    :return: string
+    """
+    try:
+        return os.path.dirname(os.path.abspath(file_path))
+    except Exception as e:
+        logging.error("Could not get directory path: {} {}".format(sys.exc_info()[0].__name__, e))
+        return "/"
+
