@@ -116,6 +116,7 @@ def create_symlink(src_path, dst_path):
     :return: None
     """
     try:
+        create_dir_for_file(dst_path)
         os.symlink(src_path, dst_path)
     except FileExistsError as e:
         logging.debug("Could not create Link: File exists: {}".format(e))

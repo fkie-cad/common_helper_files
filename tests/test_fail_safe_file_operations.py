@@ -77,6 +77,10 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         symlink_path = os.path.join(self.tmp_dir.name, 'test_symlink')
         create_symlink(test_file_path, symlink_path)
         self.assertEqual(os.readlink(symlink_path), test_file_path)
+        symlink_path_none_existing_dir = os.path.join(self.tmp_dir.name, 'some_dir/test_symlink')
+        create_symlink(test_file_path, symlink_path_none_existing_dir)
+        self.assertEqual(os.readlink(symlink_path_none_existing_dir), test_file_path)
+        # check error handling
         create_symlink(test_file_path, symlink_path)
 
     def test_get_safe_name(self):
