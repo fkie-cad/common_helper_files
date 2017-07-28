@@ -199,4 +199,3 @@ def get_dir_of_file(file_path):
     except Exception as e:
         logging.error("Could not get directory path: {} {}".format(sys.exc_info()[0].__name__, e))
         return "/"
-
