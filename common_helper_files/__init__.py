@@ -2,9 +2,6 @@ from .fail_safe_file_operations import get_binary_from_file, get_string_list_fro
 from .file_functions import read_in_chunks, get_directory_for_filename, create_dir_for_file, human_readable_file_size
 from .git_functions import get_version_string_from_git
 
-
-__version__ = '0.2'
-
 __all__ = [
     'get_directory_for_filename',
     'create_dir_for_file',

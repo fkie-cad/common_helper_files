@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
-from common_helper_files import __version__
+
+VERSION = '0.2'
 
 setup(
     name='common_helper_files',
-    version=__version__,
+    version=VERSION,
     packages=find_packages(),
     install_requires=[
         'bitmath'
