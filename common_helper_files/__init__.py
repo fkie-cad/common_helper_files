@@ -3,7 +3,7 @@ from .file_functions import read_in_chunks, get_directory_for_filename, create_d
 from .git_functions import get_version_string_from_git
 
 
-__version__ = '0.1.9'
+__version__ = '0.2'
 
 __all__ = [
     'get_directory_for_filename',
