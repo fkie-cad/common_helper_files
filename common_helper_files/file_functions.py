@@ -53,5 +53,4 @@ def human_readable_file_size(size_in_bytes):
     :type size_in_bytes: int
     :return: str
     '''
-    tmp = bitmath.Byte(bytes=size_in_bytes).best_prefix()
-    return tmp.format('{value:.2f} {unit}')
+    return bitmath.Byte(bytes=size_in_bytes).best_prefix().format('{value:.2f} {unit}')
