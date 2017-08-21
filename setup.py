@@ -1,16 +1,17 @@
 from setuptools import setup, find_packages
-from common_helper_files import __version__
+
+VERSION = '0.2'
 
 setup(
-    name="common_helper_files",
-    version=__version__,
+    name='common_helper_files',
+    version=VERSION,
     packages=find_packages(),
     install_requires=[
-        'hurry.filesize'
+        'bitmath'
     ],
-    description="file operation helper functions",
-    author="Fraunhofer FKIE",
-    author_email="peter.weidenbach@fkie.fraunhofer.de",
-    url="http://www.fkie.fraunhofer.de",
-    license="GPL-3.0"
+    description='file operation helper functions',
+    author='Fraunhofer FKIE',
+    author_email='peter.weidenbach@fkie.fraunhofer.de',
+    url='http://www.fkie.fraunhofer.de',
+    license='GPL-3.0'
 )
