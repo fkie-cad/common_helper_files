@@ -83,7 +83,7 @@ def _get_counted_file_path(original_path):
     tmp = re.search(r"-([0-9]+)\Z", original_path)
     if tmp is not None:
         current_count = int(tmp.group(1))
-        new_file_path = re.sub(r"-[0-9]+\Z", "-{}".format(current_count+1), original_path)
+        new_file_path = re.sub(r"-[0-9]+\Z", "-{}".format(current_count + 1), original_path)
     else:
         new_file_path = "{}-1".format(original_path)
     return new_file_path
