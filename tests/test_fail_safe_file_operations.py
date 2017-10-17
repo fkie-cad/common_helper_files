@@ -30,6 +30,10 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         none_existing_file_path = os.path.join(self.get_directory_of_current_file(), "data", "none_existing_file")
         file_binary = get_binary_from_file(none_existing_file_path)
         self.assertEqual(file_binary, b'', "content not correct")
+        # Test link
+        link_path = os.path.join(self.get_directory_of_current_file(), "data", "link_test")
+        file_binary = get_binary_from_file(link_path)
+        assert file_binary == 'symbolic link -> read_test'
 
     def test_fail_safe_read_file_string_list(self):
         test_file_path = os.path.join(self.get_directory_of_current_file(), "data", "multiline_test.txt")
@@ -94,7 +98,8 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         result = get_files_in_dir(test_dir_path)
         self.assertIn(os.path.join(test_dir_path, "read_test"), result, "file in root folder not found")
         self.assertIn(os.path.join(test_dir_path, "test_folder/generic_test_file"), result, "file in sub folder not found")
-        self.assertEqual(len(result), 3, "number of found files not correct")
+        print(result)
+        self.assertEqual(len(result), 4, "number of found files not correct")
 
     def test_get_files_in_dir_error(self):
         result = get_files_in_dir("/none_existing/dir")
