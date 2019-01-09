@@ -38,11 +38,16 @@ def get_string_list_from_file(file_path):
     '''
     try:
         raw = get_binary_from_file(file_path)
-        string = raw.decode(encoding='utf_8', errors='replace')
-        return string.split('\n')
+        raw_string = raw.decode(encoding='utf-8', errors='replace')
+        cleaned_string = _rm_cr(raw_string)
+        return cleaned_string.split('\n')
     except Exception as e:
         logging.error('Could not read file: {} {}'.format(sys.exc_info()[0].__name__, e))
         return []
+
+
+def _rm_cr(input_string):
+    return input_string.replace('\r', '')
 
 
 def write_binary_to_file(file_binary, file_path, overwrite=False, file_copy=False):

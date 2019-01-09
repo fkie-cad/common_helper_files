@@ -1,13 +1,15 @@
 import os
 from tempfile import TemporaryDirectory
 import unittest
+import pytest
 
 from common_helper_files import get_binary_from_file, \
     write_binary_to_file, delete_file, get_safe_name, \
     get_files_in_dir, get_string_list_from_file, \
     get_dirs_in_dir, get_directory_for_filename, \
     create_symlink, get_dir_of_file
-from common_helper_files.fail_safe_file_operations import _get_counted_file_path
+from common_helper_files.fail_safe_file_operations import _get_counted_file_path,\
+    _rm_cr
 
 
 class Test_FailSafeFileOperations(unittest.TestCase):
@@ -128,5 +130,8 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         self.assertEqual(absolute_file_path_result, self.tmp_dir.name)
 
 
-if __name__ == "__main__":
-    unittest.main()
+@pytest.mark.parametrize('input_data, expected', [
+    ('abc', 'abc'),
+    ('ab\r\nc', 'ab\nc')])
+def test_rm_cr(input_data, expected):
+    assert _rm_cr(input_data) == expected

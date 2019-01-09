@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.2'
+VERSION = '0.2.1'
 
 setup(
     name='common_helper_files',
