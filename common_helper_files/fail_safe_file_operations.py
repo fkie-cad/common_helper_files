@@ -221,7 +221,7 @@ def safe_rglob(path: Path, include_symlinks: bool = True, include_directories: b
 def _iterate_path_recursively(path: Path, include_symlinks: bool = True, include_directories: bool = True):
     try:
         if path.is_symlink():
-            if include_symlinks and path.is_file():
+            if include_symlinks and (path.is_file() or path.is_dir()):
                 yield path
             else:
                 yield from []

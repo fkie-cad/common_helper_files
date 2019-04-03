@@ -130,19 +130,27 @@ class TestFailSafeFileOperations(unittest.TestCase):
 
 
 @pytest.mark.parametrize('symlinks, directories, expected_number', [
-    (True, True, 5),
-    (False, True, 4),
-    (True, False, 4),
+    (True, True, 7),
+    (False, True, 5),
+    (True, False, 5),
     (False, False, 3),
 ])
 def test_safe_rglob(symlinks, directories, expected_number):
     test_dir_path = Path(TestFailSafeFileOperations.get_directory_of_current_file()).parent / 'tests' / 'data'
-    result = safe_rglob(test_dir_path, include_symlinks=symlinks, include_directories=directories)
-    assert len(list(result)) == expected_number
+    result = list(safe_rglob(test_dir_path, include_symlinks=symlinks, include_directories=directories))
+    assert len(result) == expected_number
 
 
-def test_safe_rglob_no_valid_path():
+def test_safe_rglob_invalid_path():
     test_path = Path('foo', 'bar')
+    assert not test_path.exists()
+    result = safe_rglob(test_path)
+    assert len(list(result)) == 0
+
+
+def test_safe_rglob_empty_dir():
+    test_path = Path(TestFailSafeFileOperations.get_directory_of_current_file()).parent / 'tests' / 'data' / 'empty_folder'
+    assert test_path.exists()
     result = safe_rglob(test_path)
     assert len(list(result)) == 0
 
