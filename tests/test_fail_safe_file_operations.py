@@ -1,18 +1,18 @@
 import os
-from tempfile import TemporaryDirectory
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 import pytest
 
-from common_helper_files import get_binary_from_file, \
-    write_binary_to_file, delete_file, get_safe_name, \
-    get_files_in_dir, get_string_list_from_file, \
-    get_dirs_in_dir, get_directory_for_filename, \
-    create_symlink, get_dir_of_file
-from common_helper_files.fail_safe_file_operations import _get_counted_file_path,\
-    _rm_cr
+from common_helper_files import (
+    create_symlink, delete_file, get_safe_name, get_binary_from_file, get_dir_of_file, get_directory_for_filename,
+    get_dirs_in_dir, get_files_in_dir, get_string_list_from_file, safe_rglob, write_binary_to_file
+)
+from common_helper_files.fail_safe_file_operations import _get_counted_file_path, _rm_cr
 
 
-class Test_FailSafeFileOperations(unittest.TestCase):
+class TestFailSafeFileOperations(unittest.TestCase):
 
     def setUp(self):
         self.tmp_dir = TemporaryDirectory(prefix="test_common_helper_file")
@@ -49,7 +49,7 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         read_binary = get_binary_from_file(file_path)
         self.assertEqual(read_binary, b'this is a test', "written data not correct")
         # Test not overwrite flag
-        write_binary_to_file(b'do not overwirte', file_path, overwrite=False)
+        write_binary_to_file(b'do not overwrite', file_path, overwrite=False)
         read_binary = get_binary_from_file(file_path)
         self.assertEqual(read_binary, b'this is a test', "written data not correct")
         # Test overwrite flag
@@ -100,8 +100,7 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         result = get_files_in_dir(test_dir_path)
         self.assertIn(os.path.join(test_dir_path, "read_test"), result, "file in root folder not found")
         self.assertIn(os.path.join(test_dir_path, "test_folder/generic_test_file"), result, "file in sub folder not found")
-        print(result)
-        self.assertEqual(len(result), 4, "number of found files not correct")
+        self.assertEqual(len(result), 6, "number of found files not correct")
 
     def test_get_files_in_dir_error(self):
         result = get_files_in_dir("/none_existing/dir")
@@ -128,6 +127,24 @@ class Test_FailSafeFileOperations(unittest.TestCase):
         write_binary_to_file('test', test_file_path)
         absolute_file_path_result = get_dir_of_file(test_file_path)
         self.assertEqual(absolute_file_path_result, self.tmp_dir.name)
+
+
+@pytest.mark.parametrize('symlinks, directories, expected_number', [
+    (True, True, 5),
+    (False, True, 4),
+    (True, False, 4),
+    (False, False, 3),
+])
+def test_safe_rglob(symlinks, directories, expected_number):
+    test_dir_path = Path(TestFailSafeFileOperations.get_directory_of_current_file()).parent / 'tests' / 'data'
+    result = safe_rglob(test_dir_path, include_symlinks=symlinks, include_directories=directories)
+    assert len(list(result)) == expected_number
+
+
+def test_safe_rglob_no_valid_path():
+    test_path = Path('foo', 'bar')
+    result = safe_rglob(test_path)
+    assert len(list(result)) == 0
 
 
 @pytest.mark.parametrize('input_data, expected', [
