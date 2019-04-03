@@ -12,6 +12,10 @@ from common_helper_files import (
 from common_helper_files.fail_safe_file_operations import _get_counted_file_path, _rm_cr
 
 
+EMPTY_FOLDER = Path(get_directory_for_filename(__file__)).parent / 'tests' / 'data' / 'empty_folder'
+EMPTY_FOLDER.mkdir(exist_ok=True)
+
+
 class TestFailSafeFileOperations(unittest.TestCase):
 
     def setUp(self):
@@ -149,9 +153,8 @@ def test_safe_rglob_invalid_path():
 
 
 def test_safe_rglob_empty_dir():
-    test_path = Path(TestFailSafeFileOperations.get_directory_of_current_file()).parent / 'tests' / 'data' / 'empty_folder'
-    test_path.mkdir(exist_ok=True)
-    result = safe_rglob(test_path)
+    assert EMPTY_FOLDER.exists()
+    result = safe_rglob(EMPTY_FOLDER)
     assert len(list(result)) == 0
 
 
