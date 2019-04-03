@@ -150,7 +150,7 @@ def test_safe_rglob_invalid_path():
 
 def test_safe_rglob_empty_dir():
     test_path = Path(TestFailSafeFileOperations.get_directory_of_current_file()).parent / 'tests' / 'data' / 'empty_folder'
-    assert test_path.exists()
+    test_path.mkdir(exist_ok=True)
     result = safe_rglob(test_path)
     assert len(list(result)) == 0
 
