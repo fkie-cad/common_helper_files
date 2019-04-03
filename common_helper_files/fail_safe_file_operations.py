@@ -223,8 +223,6 @@ def _iterate_path_recursively(path: Path, include_symlinks: bool = True, include
         if path.is_symlink():
             if include_symlinks and (path.is_file() or path.is_dir()):
                 yield path
-            else:
-                yield from []
         elif path.is_file():
             yield path
         elif path.is_dir():
@@ -234,7 +232,6 @@ def _iterate_path_recursively(path: Path, include_symlinks: bool = True, include
                 yield from _iterate_path_recursively(child_path, include_symlinks, include_directories)
     except PermissionError:
         logging.error('Permission Error: could not access path {path}'.format(path=path.absolute()))
-        yield from []
     except OSError:
         logging.warning('possible broken symlink: {path}'.format(path=path.absolute()))
-        yield from []
+    yield from []
