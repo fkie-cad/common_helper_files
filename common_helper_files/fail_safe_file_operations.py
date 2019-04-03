@@ -2,6 +2,8 @@ import logging
 import os
 import re
 import sys
+from pathlib import Path
+from typing import Iterable
 
 from .file_functions import create_dir_for_file
 
@@ -194,8 +196,8 @@ def get_dir_of_file(file_path):
     '''
     Returns absolute path of the directory including file
 
-    :param file_path: Paht of the file
-    :type: paht-like object
+    :param file_path: Path of the file
+    :type: path-like object
     :return: string
     '''
     try:
@@ -203,3 +205,36 @@ def get_dir_of_file(file_path):
     except Exception as e:
         logging.error('Could not get directory path: {} {}'.format(sys.exc_info()[0].__name__, e))
         return '/'
+
+
+def safe_rglob(path: Path, include_symlinks: bool = True, include_directories: bool = True) -> Iterable[Path]:
+    '''
+    alternative to pathlib.rglob which tries to follow symlinks and crashes if it encounters certain broken ones
+    '''
+    if not path.is_symlink() and path.is_dir():
+        for child_path in path.iterdir():
+            yield from _iterate_path_recursively(child_path, include_symlinks, include_directories)
+    else:
+        yield from []
+
+
+def _iterate_path_recursively(path: Path, include_symlinks: bool = True, include_directories: bool = True):
+    try:
+        if path.is_symlink():
+            if include_symlinks and path.is_file():
+                yield path
+            else:
+                yield from []
+        elif path.is_file():
+            yield path
+        elif path.is_dir():
+            if include_directories:
+                yield path
+            for child_path in path.iterdir():
+                yield from _iterate_path_recursively(child_path, include_symlinks, include_directories)
+    except PermissionError:
+        logging.error('Permission Error: could not access path {path}'.format(path=path.absolute()))
+        yield from []
+    except OSError:
+        logging.warning('possible broken symlink: {path}'.format(path=path.absolute()))
+        yield from []
