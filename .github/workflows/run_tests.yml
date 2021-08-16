@@ -16,11 +16,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-
-    - name: install deps
-      run: |
-        python3 -m pip install -U pip
-        python3 -m pip install --editable .[dev]
-
-    - name: run pytest
-      run: pytest
+      - name: install deps
+        run: |
+          python3 -m pip install -U pip
+          python3 -m pip install --editable .[dev]
+      - name: run pytest
+        run: pytest
