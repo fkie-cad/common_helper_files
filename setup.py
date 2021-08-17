@@ -9,10 +9,13 @@ setup(
     install_requires=[
         'bitmath'
     ],
-    tests_require=[
-        'pytest',
-        'pytest-cov',
-    ],
+    extras_require={
+        'dev': [
+            'pytest',
+            'pytest-pycodestyle',
+            'pytest-cov'
+        ]
+    },
     description='file operation helper functions',
     author='Fraunhofer FKIE',
     author_email='peter.weidenbach@fkie.fraunhofer.de',
