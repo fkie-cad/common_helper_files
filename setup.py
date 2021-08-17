@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.2.2'
+VERSION = '0.2.3'
 
 setup(
     name='common_helper_files',
@@ -9,6 +9,13 @@ setup(
     install_requires=[
         'bitmath'
     ],
+    extras_require={
+        'dev': [
+            'pytest',
+            'pytest-pycodestyle',
+            'pytest-cov'
+        ]
+    },
     description='file operation helper functions',
     author='Fraunhofer FKIE',
     author_email='peter.weidenbach@fkie.fraunhofer.de',
