@@ -50,7 +50,7 @@ def create_dir_for_file(file_path: Union[str, Path]) -> None:
     Path(file_path).resolve().parent.mkdir(parents=True, exist_ok=True)
 
 
-def human_readable_file_size(size_in_bytes: int) -> None:
+def human_readable_file_size(size_in_bytes: int) -> str:
     '''
     Returns a nicly human readable file size
 
