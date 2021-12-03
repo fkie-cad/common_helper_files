@@ -166,6 +166,9 @@ def get_dir_of_file(file_path: Union[str, Path]) -> str:
     Returns absolute path of the directory including file
 
     :param file_path: Path of the file
+
+    .. deprecated::
+        You should use pathlib instead of this function.
     '''
     try:
         return str(Path(file_path).resolve().parent)
