@@ -8,7 +8,7 @@ from common_helper_files import (
     create_symlink, delete_file, get_safe_name, get_binary_from_file, get_dir_of_file, get_directory_for_filename,
     get_dirs_in_dir, get_files_in_dir, get_string_list_from_file, safe_rglob, write_binary_to_file
 )
-from common_helper_files.fail_safe_file_operations import _get_counted_file_path, _rm_cr
+from common_helper_files.fail_safe_file_operations import _get_counted_file_path
 
 TEST_DATA_DIR = Path(__file__).absolute().parent / 'data'
 EMPTY_FOLDER = TEST_DATA_DIR / 'empty_folder'
@@ -188,11 +188,3 @@ def test_safe_rglob_empty_dir():
     assert EMPTY_FOLDER.exists()
     result = safe_rglob(EMPTY_FOLDER)
     assert len(list(result)) == 0
-
-
-@pytest.mark.parametrize('input_data, expected', [
-    ('abc', 'abc'),
-    ('ab\r\nc', 'ab\nc'),
-])
-def test_rm_cr(input_data, expected):
-    assert _rm_cr(input_data) == expected

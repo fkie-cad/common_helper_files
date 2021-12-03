@@ -40,12 +40,8 @@ def get_string_list_from_file(file_path: Union[str, Path]) -> List[str]:
     '''
     raw = get_binary_from_file(file_path)
     raw_string = raw.decode(encoding='utf-8', errors='replace')
-    cleaned_string = _rm_cr(raw_string)
+    cleaned_string = raw_string.replace('\r', '')
     return cleaned_string.split('\n')
-
-
-def _rm_cr(input_string):
-    return input_string.replace('\r', '')
 
 
 def write_binary_to_file(file_binary: Union[str, bytes], file_path: Union[str, Path], overwrite: bool = False, file_copy: bool = False) -> None:
