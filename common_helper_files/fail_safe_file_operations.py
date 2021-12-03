@@ -152,9 +152,8 @@ def get_dirs_in_dir(directory_path: Union[str, Path]) -> List[str]:
     try:
         path = Path(directory_path)
         for item in path.iterdir():
-            if not Path(item).is_dir():
-                continue
-            result.append(str(item.resolve()))
+            if Path(item).is_dir():
+                result.append(str(item.resolve()))
     except Exception as exc:
         logging.error(f'Could not get directories: {exc}', exc_info=True)
 
