@@ -52,7 +52,7 @@ def create_dir_for_file(file_path: Union[str, Path]) -> None:
 
 def human_readable_file_size(size_in_bytes: int) -> str:
     '''
-    Returns a nicly human readable file size
+    Returns a nicely human readable file size
 
     :param size_in_bytes: Size in Bytes
     '''
