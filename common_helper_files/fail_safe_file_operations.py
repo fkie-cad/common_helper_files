@@ -17,14 +17,14 @@ def get_binary_from_file(file_path: Union[str, Path]) -> Union[str, bytes]:
     :return: file's binary as bytes; returns empty byte string on error
     '''
     try:
-        p = Path(file_path)
-        if p.is_symlink():
+        path = Path(file_path)
+        if path.is_symlink():
             # We need to wait for python 3.9 for Path.readlink
-            binary = f'symbolic link -> {os.readlink(p)}'
+            binary = f'symbolic link -> {os.readlink(path)}'
         else:
-            binary = p.read_bytes()
+            binary = path.read_bytes()
     except Exception as e:
-        logging.error(f'Could not read file: {sys.exc_info()[0].__name__} {e}')
+        logging.error(f'Could not read file: {e}', exc_info=True)
         binary = b''
 
     return binary
@@ -66,8 +66,8 @@ def write_binary_to_file(file_binary: Union[str, bytes], file_path: Union[str, P
         if file_path.exists() and (not overwrite or file_copy):
             file_path = Path(_get_counted_file_path(str(file_path)))
         file_path.write_bytes(file_binary)
-    except Exception as e:
-        logging.error('Could not write file: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except Exception as exc:
+        logging.error(f'Could not write file: {exc}', exc_info=True)
 
 
 def _get_counted_file_path(original_path):
@@ -89,8 +89,8 @@ def delete_file(file_path: Union[str, Path]) -> None:
     '''
     try:
         Path(file_path).unlink()
-    except Exception as e:
-        logging.error('Could not delete file: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except Exception as exc:
+        logging.error(f'Could not delete file: {exc}', exc_info=True)
 
 
 def create_symlink(src_path: Union[str, Path], dst_path: Union[str, Path]) -> None:
@@ -104,10 +104,10 @@ def create_symlink(src_path: Union[str, Path], dst_path: Union[str, Path]) -> No
     try:
         create_dir_for_file(dst_path)
         Path(dst_path).symlink_to(src_path)
-    except FileExistsError as e:
-        logging.debug('Could not create Link: File exists: {}'.format(e))
-    except Exception as e:
-        logging.error('Could not create link: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except FileExistsError as exc:
+        logging.debug(f'Could not create Link: File exists: {exc}')
+    except Exception as exc:
+        logging.error(f'Could not create link: {exc}', exc_info=True)
 
 
 def get_safe_name(file_name: str, max_size: int = 200, valid_characters: str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_+. ') -> str:
@@ -141,8 +141,8 @@ def get_files_in_dir(directory_path: Union[str, Path]) -> List[str]:
         for file_path, _, files in os.walk(directory_path):
             for file_ in files:
                 result.append(str(Path(file_path, file_).absolute()))
-    except Exception as e:
-        logging.error('Could not get files: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except Exception as exc:
+        logging.error(f'Could not get files: {exc}', exc_info=True)
     return result
 
 
@@ -154,13 +154,13 @@ def get_dirs_in_dir(directory_path: Union[str, Path]) -> List[str]:
     '''
     result = []
     try:
-        p = Path(directory_path)
-        for item in p.iterdir():
+        path = Path(directory_path)
+        for item in path.iterdir():
             if not Path(item).is_dir():
                 continue
             result.append(str(item.resolve()))
-    except Exception as e:
-        logging.error('Could not get directories: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except Exception as exc:
+        logging.error(f'Could not get directories: {exc}', exc_info=True)
 
     return result
 
@@ -173,8 +173,8 @@ def get_dir_of_file(file_path: Union[str, Path]) -> str:
     '''
     try:
         return str(Path(file_path).resolve().parent)
-    except Exception as e:
-        logging.error('Could not get directory path: {} {}'.format(sys.exc_info()[0].__name__, e))
+    except Exception as exc:
+        logging.error(f'Could not get directory path: {exc}', exc_info=True)
         return '/'
 
 
@@ -202,7 +202,7 @@ def _iterate_path_recursively(path: Path, include_symlinks: bool = True, include
             for child_path in path.iterdir():
                 yield from _iterate_path_recursively(child_path, include_symlinks, include_directories)
     except PermissionError:
-        logging.error('Permission Error: could not access path {path}'.format(path=path.absolute()))
+        logging.error(f'Permission Error: could not access path {path.absolute()}')
     except OSError:
-        logging.warning('possible broken symlink: {path}'.format(path=path.absolute()))
+        logging.warning(f'possible broken symlink: {path.absolute()}')
     yield from []
