@@ -47,7 +47,9 @@ def get_string_list_from_file(file_path: Union[str, Path]) -> List[str]:
 def write_binary_to_file(file_binary: Union[str, bytes], file_path: Union[str, Path], overwrite: bool = False, file_copy: bool = False) -> None:
     '''
     Fail-safe file write operation. Creates directories if needed.
-    Errors are logged. No exception raised.
+    Does not overwrite existing files if ``overwrite`` is not set.
+    Errors are logged.
+    Raises a ``ValueError`` if ``overwrite`` and ``file_copy`` are both ``True``.
 
     :param file_binary: binary to write into the file
     :param file_path_str: Path of the file. Can be absolute or relative to the current directory.
@@ -56,12 +58,20 @@ def write_binary_to_file(file_binary: Union[str, bytes], file_path: Union[str, P
     :param file_copy: If overwrite is false and file already exists, write into new file and add a counter to the file name.
     :default file_copy: False
     '''
+    if overwrite and file_copy:
+        raise ValueError("The arguments overwrite and file_copy cannot both be true.")
+
     try:
         file_path = Path(file_path)
-        create_dir_for_file(file_path)
-        if file_path.exists() and (not overwrite or file_copy):
-            file_path = Path(_get_counted_file_path(str(file_path)))
-        file_path.write_bytes(file_binary)
+        if file_path.exists():
+            if overwrite:
+                file_path.write_bytes(file_binary)
+            elif file_copy:
+                file_path = Path(_get_counted_file_path(str(file_path)))
+                file_path.write_bytes(file_binary)
+        else:
+            create_dir_for_file(file_path)
+            file_path.write_bytes(file_binary)
     except Exception as exc:
         logging.error(f'Could not write file: {exc}', exc_info=True)
 
